@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      language-code:
+        description: 'the language of the wikimedia property e.g. tr - turkish, en - english'
+        required: true
+        default: 'en'
+      wiki-type:
+        description: 'the type of the wikimedia property e.g. wikipedia, wikiquote'
+        required: true
+        default: 'wikipedia'
+      hosting-dns-domain:
+        description: 'the DNS domain name the mirror will be hosted at e.g. tr.wikipedia-on-ipfs.org'
+        required: false
+        default: ''
+      hosting-ipns-hash:
+        description: 'the IPNS hash the mirror will be hosted at e.g. QmVH1VzGBydSfmNG7rmdDjAeBZ71UVeEahVbNpFQtwZK8W'
+        required: false
+        default: ''
+      main-page-version:
+        description: 'an override hack used on Turkish Wikipedia, it sets the main page version as there are issues with the Kiwix version id'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/build
+        with:
+          language-code: ${{ github.event.inputs.language-code }}
+          wiki-type: ${{ github.event.inputs.wiki-type }}
+          hosting-dns-domain: ${{ github.event.inputs.hosting-dns-domain }}
+          hosting-ipns-hash: ${{ github.event.inputs.hosting-ipns-hash }}
+          main-page-version: ${{ github.event.inputs.main-page-version }}
+      - run: ls tmp
